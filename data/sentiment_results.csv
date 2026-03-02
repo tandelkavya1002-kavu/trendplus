@@ -1,0 +1,9 @@
+ticker,text,score,sentiment
+TSLA,Tesla hits record sales this quarter! Amazing growth!,0.79,Positive
+TSLA,Tesla stock crashes after CEO controversy,0.0,Neutral
+NVDA,Nvidia GPU demand explodes due to AI boom,-0.128,Negative
+AAPL,Apple faces lawsuit over patent issues,-0.226,Negative
+MSFT,Microsoft Azure cloud revenue up 30 percent,0.0,Neutral
+AMZN,Amazon lays off thousands of employees,0.178,Positive
+NVDA,Nvidia beats earnings expectations massively,0.0,Neutral
+TSLA,Tesla new model receives terrible reviews,-0.477,Negative

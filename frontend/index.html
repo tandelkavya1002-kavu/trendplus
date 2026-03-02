@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendPulse - Stock Sentiment Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0e1a;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        nav {
+            background: #0d1226;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1e2a45;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .logo span { color: #ffffff; }
+
+        .nav-time {
+            color: #8892a4;
+            font-size: 14px;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            padding: 50px 20px 30px;
+            background: linear-gradient(180deg, #0d1226 0%, #0a0e1a 100%);
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .header h1 span { color: #00d4ff; }
+
+        .header p {
+            color: #8892a4;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        /* SECTION TITLE */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00d4ff;
+            padding: 30px 40px 15px;
+            border-left: 4px solid #00d4ff;
+            margin-left: 40px;
+        }
+
+        /* CARDS CONTAINER */
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 10px 40px 30px;
+        }
+
+        /* STOCK CARD */
+        .card {
+            background: #0d1226;
+            border: 1px solid #1e2a45;
+            border-radius: 12px;
+            padding: 20px;
+            width: 200px;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+        }
+
+        .card .ticker {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .card .price {
+            font-size: 28px;
+            font-weight: 800;
+            color: #00d4ff;
+            margin: 8px 0;
+        }
+
+        .card .change {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .positive { background: #0d2e1a; color: #00e676; }
+        .negative { background: #2e0d0d; color: #ff5252; }
+
+        /* SENTIMENT CARDS */
+        .sentiment-card {
+            background: #0d1226;
+            border: 1px solid #1e2a45;
+            border-radius: 12px;
+            padding: 20px;
+            width: 220px;
+        }
+
+        .sentiment-card .ticker {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .sentiment-bar {
+            height: 8px;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+
+        .bar-positive { background: #00e676; }
+        .bar-negative { background: #ff5252; }
+        .bar-neutral { background: #ffab40; }
+
+        .sentiment-label {
+            font-size: 13px;
+            color: #8892a4;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* TRENDING */
+        .trending-card {
+            background: linear-gradient(135deg, #0d1226, #1a2340);
+            border: 1px solid #00d4ff;
+            border-radius: 12px;
+            padding: 20px 25px;
+            width: 250px;
+        }
+
+        .trending-card .rank {
+            font-size: 13px;
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+
+        .trending-card .name {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .trending-card .info {
+            font-size: 13px;
+            color: #8892a4;
+            margin-top: 8px;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #8892a4;
+            font-size: 13px;
+            border-top: 1px solid #1e2a45;
+            margin-top: 40px;
+        }
+
+        /* LOADING */
+        .loading {
+            color: #8892a4;
+            padding: 20px 40px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">Trend<span>Pulse</span></div>
+        <div class="nav-time" id="current-time"></div>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Real-Time <span>Stock Sentiment</span> Dashboard</h1>
+        <p>Tracking social media sentiment and correlating with stock prices</p>
+    </div>
+
+    <!-- TRENDING SECTION -->
+    <div class="section-title">🔥 Trending Stocks</div>
+    <div class="cards" id="trending-cards">
+        <div class="loading">Loading trending stocks...</div>
+    </div>
+
+    <!-- STOCK PRICES SECTION -->
+    <div class="section-title">📈 Stock Prices</div>
+    <div class="cards" id="stock-cards">
+        <div class="loading">Loading stock data...</div>
+    </div>
+
+    <!-- SENTIMENT SECTION -->
+    <div class="section-title">😊 Sentiment Analysis</div>
+    <div class="cards" id="sentiment-cards">
+        <div class="loading">Loading sentiment data...</div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        TrendPulse &copy; 2026 | College Project | Data from Yahoo Finance
+    </footer>
+
+    <script>
+        const API = "http://127.0.0.1:8000";
+
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById("current-time").textContent = now.toLocaleString();
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Load trending stocks
+        async function loadTrending() {
+            try {
+                const res = await fetch(`${API}/trending`);
+                const data = await res.json();
+                const container = document.getElementById("trending-cards");
+                container.innerHTML = "";
+                data.trending.forEach((stock, i) => {
+                    const change = stock.price_change_percent;
+                    container.innerHTML += `
+                        <div class="trending-card">
+                            <div class="rank">#${i + 1} Trending</div>
+                            <div class="name">${stock.ticker}</div>
+                            <div class="info">Price Change: <strong style="color:${change >= 0 ? '#00e676' : '#ff5252'}">${change}%</strong></div>
+                            <div class="info">Sentiment: <strong>${stock.avg_sentiment.toFixed(3)}</strong></div>
+                        </div>`;
+                });
+            } catch (e) {
+                document.getElementById("trending-cards").innerHTML = "<div class='loading'>Could not load data. Is the API running?</div>";
+            }
+        }
+
+        // Load stock prices
+        async function loadStocks() {
+            try {
+                const res = await fetch(`${API}/stocks`);
+                const data = await res.json();
+                const container = document.getElementById("stock-cards");
+                container.innerHTML = "";
+                data.stocks.forEach(stock => {
+                    const isPositive = stock.price_change >= 0;
+                    container.innerHTML += `
+                        <div class="card">
+                            <div class="ticker">${stock.ticker}</div>
+                            <div class="price">$${stock.latest_price}</div>
+                            <div class="change ${isPositive ? 'positive' : 'negative'}">
+                                ${isPositive ? '▲' : '▼'} ${stock.price_change}%
+                            </div>
+                        </div>`;
+                });
+            } catch (e) {
+                document.getElementById("stock-cards").innerHTML = "<div class='loading'>Could not load data.</div>";
+            }
+        }
+
+        // Load sentiment
+        async function loadSentiment() {
+            const tickers = ["TSLA", "NVDA", "AAPL", "AMZN", "MSFT"];
+            const container = document.getElementById("sentiment-cards");
+            container.innerHTML = "";
+            for (const ticker of tickers) {
+                try {
+                    const res = await fetch(`${API}/sentiment/${ticker}`);
+                    const data = await res.json();
+                    const records = data.sentiment;
+                    const positive = records.filter(r => r.sentiment === "Positive").length;
+                    const negative = records.filter(r => r.sentiment === "Negative").length;
+                    const neutral = records.filter(r => r.sentiment === "Neutral").length;
+                    const total = records.length || 1;
+                    container.innerHTML += `
+                        <div class="sentiment-card">
+                            <div class="ticker">${ticker}</div>
+                            <div class="sentiment-label"><span>Positive</span><span>${positive}</span></div>
+                            <div class="sentiment-bar bar-positive" style="width:${(positive/total)*100}%"></div>
+                            <div class="sentiment-label"><span>Negative</span><span>${negative}</span></div>
+                            <div class="sentiment-bar bar-negative" style="width:${(negative/total)*100}%"></div>
+                            <div class="sentiment-label"><span>Neutral</span><span>${neutral}</span></div>
+                            <div class="sentiment-bar bar-neutral" style="width:${(neutral/total)*100}%"></div>
+                        </div>`;
+                } catch(e) {}
+            }
+        }
+
+        // Load everything
+        loadTrending();
+        loadStocks();
+        loadSentiment();
+    </script>
+
+</body>
+</html>

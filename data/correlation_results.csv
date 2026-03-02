@@ -1,0 +1,6 @@
+ticker,latest_price,avg_price,price_change_percent,avg_sentiment
+TSLA,402.51,420.54,-8.22,0.10433333333333335
+NVDA,177.19,186.2,-5.27,-0.064
+AAPL,264.18,263.43,2.41,-0.226
+AMZN,210.0,221.64,-11.83,0.178
+MSFT,392.74,421.49,-13.8,0.0
